@@ -9,7 +9,13 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+# copy entrypoint.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# copy project
 COPY . .
 
-# collect static files
-RUN python manage.py collectstatic --noinput
+# run entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
